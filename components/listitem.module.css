@@ -1,0 +1,29 @@
+.item {
+  display: grid;
+  grid-template-columns: 1.2em 1fr;
+  column-gap: 1.2em;
+  margin: 0.5em 0;
+}
+
+.rank,
+.item small {
+  color: var(--fg-light);
+}
+
+.rank {
+  text-align: right;
+}
+
+.item h2,
+.item small {
+  margin: 0;
+}
+
+.item h2 {
+  font-size: 1em;
+  font-weight: 400;
+}
+
+.item a:visited {
+  color: var(--fg-light);
+}
