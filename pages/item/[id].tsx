@@ -46,7 +46,7 @@ const Story = () => {
         {story.text && <p dangerouslySetInnerHTML={{ __html: story.text }} />}
 
         <section>
-          {story.kids.map((id: any) => (
+          {story.kids?.map((id: any) => (
             <Comment key={id} id={id} />
           ))}
         </section>

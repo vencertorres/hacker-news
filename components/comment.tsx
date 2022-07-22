@@ -1,12 +1,17 @@
 import { formatDistanceToNowStrict, fromUnixTime } from "date-fns";
 import useSWR from "swr";
 import { getItem } from "../lib/items";
+import Error500 from "../pages/500";
 import styles from "./comment.module.css";
 
 const Comment = ({ id }: { id: number }) => {
   const { data: comment, error } = useSWR(() => id, getItem);
 
+  if (error) return <Error500 />;
+
   if (!comment) return <p>Loading...</p>;
+
+  if (comment.deleted || comment.dead) return null;
 
   return (
     <article className={styles.comment}>
@@ -16,15 +21,13 @@ const Comment = ({ id }: { id: number }) => {
 
       <p dangerouslySetInnerHTML={{ __html: comment.text }} />
 
-      {comment.kids && (
-        <ul>
-          {comment.kids.map((id: number) => (
-            <li key={id}>
-              <Comment id={id} />
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul>
+        {comment.kids?.map((id: number) => (
+          <li key={id}>
+            <Comment id={id} />
+          </li>
+        ))}
+      </ul>
     </article>
   );
 };
