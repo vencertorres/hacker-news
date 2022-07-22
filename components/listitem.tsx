@@ -37,8 +37,11 @@ const ListItem = ({ ...story }: Props) => (
           <>{formatDistanceToNowStrict(fromUnixTime(story.time))}</>
         ) : (
           <>
-            {story.score} points by {story.by} {formatDistanceToNowStrict(fromUnixTime(story.time))}{" "}
-            ago |{" "}
+            {story.score} points by{" "}
+            <Link href="/user/[username]" as={`/user/${story.by}`}>
+              <a>{story.by}</a>
+            </Link>{" "}
+            {formatDistanceToNowStrict(fromUnixTime(story.time))} ago |{" "}
             <Link href="/item/[id]" as={`/item/${story.id}`}>
               <a>
                 {story.descendants}

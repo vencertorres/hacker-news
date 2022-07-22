@@ -36,8 +36,11 @@ const Story = () => {
         </h1>
 
         <small>
-          {story.score} points by {story.by} {formatDistanceToNowStrict(fromUnixTime(story.time))}{" "}
-          ago
+          {story.score} points by{" "}
+          <Link href="/user/[username]" as={`/user/${story.by}`}>
+            <a>{story.by}</a>
+          </Link>{" "}
+          {formatDistanceToNowStrict(fromUnixTime(story.time))} ago
         </small>
 
         {story.text && <p dangerouslySetInnerHTML={{ __html: story.text }} />}
