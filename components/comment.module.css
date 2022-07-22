@@ -1,0 +1,29 @@
+.comment {
+  margin: 1em 0;
+  overflow-wrap: break-word;
+}
+
+.comment h2 {
+  margin: 0 0 0.25em 0;
+  color: var(--fg-light);
+  font-size: 0.9em;
+  font-weight: 400;
+}
+
+.comment p {
+  margin: 0;
+}
+
+.comment pre {
+  overflow-x: auto;
+}
+
+.comment ul {
+  list-style: none;
+}
+
+@media (max-width: 500px) {
+  .comment ul {
+    padding: 0 0 0 1em;
+  }
+}

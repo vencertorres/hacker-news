@@ -1,0 +1,16 @@
+.item p {
+  overflow-wrap: break-word;
+}
+
+.item h1 {
+  margin: 0;
+}
+
+.item h1 a {
+  text-decoration: none;
+}
+
+.item small {
+  color: var(--fg-light);
+  font-weight: 400;
+}

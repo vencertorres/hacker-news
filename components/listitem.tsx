@@ -1,10 +1,7 @@
 import { formatDistanceToNowStrict, fromUnixTime } from "date-fns";
+import Link from "next/link";
 import { parse } from "tldts";
 import styles from "./listitem.module.css";
-
-type Time = number;
-
-type URL = string;
 
 type Props = {
   rank: number;
@@ -13,36 +10,41 @@ type Props = {
   id: number;
   kids: number[];
   score: number;
-  time: Time;
+  time: number;
   title: string;
   type: string;
-  url: URL;
+  url: string;
 };
 
-const Time = ({ time }: { time: Time }) => <>{formatDistanceToNowStrict(fromUnixTime(time))}</>;
-
-const Domain = ({ url }: { url: URL }) => <small>({parse(url).domain})</small>;
-
 const ListItem = ({ ...story }: Props) => (
-  <article className={styles.item}>
+  <article className={styles.listitem}>
     <div className={styles.rank}>{story.rank}</div>
 
     <div>
       <h2>
-        <a href={story.url}>{story.title}</a> {story.url && <Domain url={story.url} />}
+        {story.url ? (
+          <a href={story.url}>{story.title}</a>
+        ) : (
+          <Link href="/item/[id]" as={`/item/${story.id}`}>
+            {story.title}
+          </Link>
+        )}{" "}
+        {story.url && <small>({parse(story.url).domain})</small>}
       </h2>
 
       <small>
         {story.type === "job" ? (
-          <Time time={story.time} />
+          <>{formatDistanceToNowStrict(fromUnixTime(story.time))}</>
         ) : (
           <>
-            {story.score} points by {story.by} <Time time={story.time} /> ago
-            {story.descendants
-              ? ` | ${story.descendants} comments`
-              : story.descendants === 1
-              ? ` | ${story.descendants} comment`
-              : null}
+            {story.score} points by {story.by} {formatDistanceToNowStrict(fromUnixTime(story.time))}{" "}
+            ago |{" "}
+            <Link href="/item/[id]" as={`/item/${story.id}`}>
+              <a>
+                {story.descendants}
+                {story.descendants === 1 ? " comment" : " comments"}
+              </a>
+            </Link>
           </>
         )}
       </small>

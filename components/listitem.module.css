@@ -1,4 +1,4 @@
-.item {
+.listitem {
   display: grid;
   grid-template-columns: 1.2em 1fr;
   column-gap: 1.2em;
@@ -6,7 +6,7 @@
 }
 
 .rank,
-.item small {
+.listitem small {
   color: var(--fg-light);
 }
 
@@ -14,16 +14,20 @@
   text-align: right;
 }
 
-.item h2,
-.item small {
+.listitem h2,
+.listitem small {
   margin: 0;
 }
 
-.item h2 {
+.listitem h2 {
   font-size: 1em;
   font-weight: 400;
 }
 
-.item a:visited {
+.listitem h2 a {
+  text-decoration: none;
+}
+
+.listitem a:visited {
   color: var(--fg-light);
 }

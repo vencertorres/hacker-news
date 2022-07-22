@@ -10,8 +10,13 @@ const getIds = async (type: string) => {
 
 export const getItem = async (id: number) => {
   const res = await fetch(`${BASE_URL}/item/${id}.json`);
-  const story = await res.json();
-  return story;
+  const item = await res.json();
+
+  if (!item) {
+    throw new Error("Item not found");
+  }
+
+  return item;
 };
 
 const getPage = (page: string) => {
