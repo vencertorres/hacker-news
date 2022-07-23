@@ -26,3 +26,11 @@
     padding: 0 0 0 1em;
   }
 }
+
+.comment button {
+  padding: 0;
+  border: none;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+}
