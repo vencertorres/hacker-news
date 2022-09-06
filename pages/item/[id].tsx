@@ -1,60 +1,62 @@
-import { formatDistanceToNowStrict, fromUnixTime } from "date-fns";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import useSWR from "swr";
-import { parse } from "tldts";
-import Comment from "../../components/comment";
-import { getItem } from "../../lib/items";
-import Error500 from "../500";
-import styles from "./item.module.css";
+import { ParsedUrlQuery } from "querystring";
+import Comments from "../../components/comments";
+import Story from "../../components/story";
+import { fetchComments } from "../../lib/fetch-comments";
+import { fetchData } from "../../lib/fetch-data";
 
-const Story = () => {
-  const { query, isReady } = useRouter();
-  const { data: story, error } = useSWR(isReady ? query.id : null, getItem);
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [{ params: { id: "1" } }],
+    fallback: "blocking",
+  };
+};
 
-  if (error) return <Error500 />;
+interface Params extends ParsedUrlQuery {
+  id: string;
+}
 
-  if (!story) return null;
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { id } = context.params as Params;
+  const story = await fetchData(+id);
+  return {
+    props: {
+      story,
+      comments: await fetchComments(story.kids),
+    },
+    revalidate: 60,
+  };
+};
+
+const ItemPage = ({ story, comments }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const title = `${story.title} | Hacker News`;
 
   return (
-    <div className={styles.item}>
+    <div>
       <Head>
-        <title>{story.title} | Hacker News</title>
+        <title>{title}</title>
       </Head>
 
-      <article>
-        <h1>
-          {story.url ? (
-            <a href={story.url}>{story.title}</a>
-          ) : (
-            <Link href="/item/[id]" as={`/item/${story.id}`}>
-              {story.title}
-            </Link>
-          )}{" "}
-          {story.url && <small>({parse(story.url).domain})</small>}
-        </h1>
+      <Story {...story} />
+      <p dangerouslySetInnerHTML={{ __html: story.text }} />
 
-        <small>
-          {story.score} points by{" "}
-          <Link href="/user/[username]" as={`/user/${story.by}`}>
-            <a>{story.by}</a>
-          </Link>{" "}
-          {formatDistanceToNowStrict(fromUnixTime(story.time))} ago
-        </small>
+      <hr />
 
-        {story.text && <p dangerouslySetInnerHTML={{ __html: story.text }} />}
+      <Comments comments={comments} />
 
-        <hr />
+      <style jsx>{`
+        p {
+          color: var(--fg-light);
+        }
 
-        <section>
-          {story.kids?.map((id: any) => (
-            <Comment key={id} id={id} />
-          ))}
-        </section>
-      </article>
+        hr {
+          margin-top: 3rem;
+          border: none;
+        }
+      `}</style>
     </div>
   );
 };
 
-export default Story;
+export default ItemPage;

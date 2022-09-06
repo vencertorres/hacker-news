@@ -1,40 +1,76 @@
-import { formatDistanceToNowStrict, fromUnixTime } from "date-fns";
 import Link from "next/link";
 import { useState } from "react";
-import useSWR from "swr";
-import { getItem } from "../lib/items";
-import styles from "./comment.module.css";
 
-const Comment = ({ id }: { id: number }) => {
-  const { data: comment } = useSWR(() => id, getItem);
-  const [isCollapsed, setCollapsed] = useState(false);
+const Comment = (props: any) => {
+  const [expanded, setExpanded] = useState(true);
+  const { by, comments, time, text, dead, deleted } = props;
 
-  if (!comment) return <p>Loading...</p>;
-
-  if (comment.deleted || comment.dead) return null;
+  if (dead || deleted) return null;
 
   return (
-    <article className={styles.comment}>
-      <h2>
-        <Link href="/user/[username]" as={`/user/${comment.by}`}>
-          <a>{comment.by}</a>
+    <li>
+      <div className="meta">
+        <Link href={`/user/${by}`}>
+          <a className="user">{by}</a>
         </Link>{" "}
-        {formatDistanceToNowStrict(fromUnixTime(comment.time))}{" "}
-        <button onClick={() => setCollapsed(!isCollapsed)}>{isCollapsed ? "[+]" : "[–]"}</button>
-      </h2>
+        {time} <button onClick={() => setExpanded(!expanded)}>[–]</button>
+      </div>
 
-      {!isCollapsed && <p dangerouslySetInnerHTML={{ __html: comment.text }} />}
+      {expanded && (
+        <>
+          <p dangerouslySetInnerHTML={{ __html: text }} />
 
-      {!isCollapsed && (
-        <ul>
-          {comment.kids?.map((id: number) => (
-            <li key={id}>
-              <Comment id={id} />
-            </li>
-          ))}
-        </ul>
+          <ul>
+            {(comments || []).map((comment: any) => (
+              <Comment key={comment.id} {...comment} />
+            ))}
+          </ul>
+        </>
       )}
-    </article>
+
+      <style jsx global>{`
+        .meta {
+          color: var(--fg-light);
+          font-size: 0.9em;
+          font-weight: 400;
+        }
+
+        .user:link {
+          color: var(--fg-light);
+          text-decoration: none;
+        }
+
+        p {
+          margin: 0.5em 0;
+        }
+
+        p a:link {
+          text-decoration: underline;
+        }
+
+        p pre {
+          overflow-x: auto;
+        }
+
+        ul {
+          list-style: none;
+        }
+
+        button {
+          padding: 0;
+          border: none;
+          color: inherit;
+          background: none;
+          cursor: pointer;
+        }
+
+        @media only screen and (min-width: 300px) and (max-width: 750px) {
+          ul {
+            padding-left: 1rem;
+          }
+        }
+      `}</style>
+    </li>
   );
 };
 

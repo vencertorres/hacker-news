@@ -1,38 +1,46 @@
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import useSWR from "swr";
-import Error500 from "../500";
+import { ParsedUrlQuery } from "querystring";
+import { fetchData } from "../../lib/fetch-data";
 
-export const getUser = async (username: string) => {
-  const res = await fetch(`https://hacker-news.firebaseio.com/v0/user/${username}.json`);
-  const user = await res.json();
-
-  if (!user) {
-    throw new Error("Item not found");
-  }
-
-  return user;
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [{ params: { username: "pg" } }],
+    fallback: "blocking",
+  };
 };
 
-const User = () => {
-  const { query, isReady } = useRouter();
-  const { data: user, error } = useSWR(isReady ? query.username : null, getUser);
+interface Params extends ParsedUrlQuery {
+  username: string;
+}
 
-  if (error) return <Error500 />;
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { username } = context.params as Params;
+  const user = await fetchData(username);
+  return {
+    props: {
+      user,
+    },
+    revalidate: 60,
+  };
+};
 
-  if (!user) return null;
+const User = ({ user }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const title = `Profile: ${user.id} | Hacker News`;
 
   return (
     <>
       <Head>
-        <title>Profile: {user.id} | Hacker News</title>
+        <title>{title}</title>
       </Head>
 
-      <h1>{user.id}</h1>
-      <p>created: {user.created}</p>
+      <p>user: {user.id}</p>
+      <p>created: {user.time}</p>
       <p>karma: {user.karma}</p>
 
-      <p dangerouslySetInnerHTML={{ __html: user.about }} />
+      <p>
+        about: <span dangerouslySetInnerHTML={{ __html: user.about }} />
+      </p>
 
       <p>
         <a href={`https://news.ycombinator.com/submitted?id=${user.id}`}>submissions</a>
@@ -43,6 +51,13 @@ const User = () => {
       <p>
         <a href={`https://news.ycombinator.com/favorites?id=${user.id}`}>favorites</a>
       </p>
+
+      <style jsx>{`
+        h1 {
+          font-size: 1rem;
+          font-weight: 400;
+        }
+      `}</style>
     </>
   );
 };

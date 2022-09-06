@@ -2,12 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  async redirects() {
+  async rewrites() {
     return [
       {
         source: "/",
-        destination: "/top/1",
-        permanent: true,
+        destination: "/news/1",
+      },
+      {
+        source: "/:stories(news|newest|ask|show|jobs)",
+        destination: "/:stories/1",
       },
     ];
   },

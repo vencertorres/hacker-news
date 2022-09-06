@@ -1,39 +1,67 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-import styles from "./navigation.module.css";
+
+const Item = ({ href, children }: { href: string; children: React.ReactNode }) => {
+  return (
+    <li>
+      <Link href={href}>
+        <a>{children}</a>
+      </Link>
+
+      <style jsx>{`
+        li:nth-child(2) {
+          font-weight: 700;
+        }
+
+        li:nth-child(n + 3) a::before {
+          content: "|";
+          margin-right: 0.5rem;
+        }
+
+        a:link,
+        a:visited {
+          color: var(--fg);
+          text-decoration: none;
+        }
+      `}</style>
+    </li>
+  );
+};
 
 const Navigation = () => {
-  const { query } = useRouter();
-
   return (
-    <nav className={styles.nav}>
-      <ul className={styles.list}>
-        <li>
-          <Link href="/top/1">
-            <a className={query.stories === "top" ? styles.active : ""}>top</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/new/1">
-            <a className={query.stories === "new" ? styles.active : ""}>new</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/ask/1">
-            <a className={query.stories === "ask" ? styles.active : ""}>ask</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/show/1">
-            <a className={query.stories === "show" ? styles.active : ""}>show</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/jobs/1">
-            <a className={query.stories === "jobs" ? styles.active : ""}>jobs</a>
-          </Link>
-        </li>
+    <nav>
+      <ul>
+        <Item href={"/"}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/y18.gif" alt="logo" />
+        </Item>
+        <Item href={"/news"}>Hacker News</Item>
+        <Item href={"/newest"}>new</Item>
+        <Item href={"/ask"}>ask</Item>
+        <Item href={"/show"}>show</Item>
+        <Item href={"/jobs"}>jobs</Item>
       </ul>
+
+      <style jsx>{`
+        nav {
+          padding: 0.15rem;
+          background: var(--accent);
+        }
+
+        ul {
+          display: flex;
+          column-gap: 0.5rem;
+          align-items: center;
+          padding: 0;
+          margin: 0;
+          list-style: none;
+        }
+
+        img {
+          display: block;
+          border: 1px solid #fff;
+        }
+      `}</style>
     </nav>
   );
 };

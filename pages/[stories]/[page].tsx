@@ -1,35 +1,76 @@
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import useSWR from "swr";
-import ListItem from "../../components/listitem";
-import { getItems } from "../../lib/items";
-import Error500 from "../500";
+import { ParsedUrlQuery } from "querystring";
+import ListItem from "../../components/story";
+import { fetchStories } from "../../lib/fetch-stories";
 
-const Stories = () => {
-  const { query, isReady } = useRouter();
-  const { data, error } = useSWR(isReady ? [query.stories, query.page] : null, getItems);
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [{ params: { stories: "news", page: "1" } }],
+    fallback: "blocking",
+  };
+};
 
-  if (error) {
-    return <Error500 />;
-  }
+interface Params extends ParsedUrlQuery {
+  stories: string;
+  page: string;
+}
 
-  if (!data) return null;
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { stories, page } = context.params as Params;
+  const { items, start } = await fetchStories(stories, page);
+  return {
+    props: {
+      items,
+      start,
+      stories,
+      page,
+    },
+    revalidate: 60,
+  };
+};
 
+const Stories = ({
+  items,
+  start,
+  stories,
+  page,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
       <Head>
         <title>Hacker News</title>
       </Head>
 
-      <section>
-        {data.items.map((story: any, index: number) => (
-          <ListItem key={story.id} rank={data.start + index + 1} {...story} />
+      <ol start={start + 1}>
+        {items.map((story: any) => (
+          <li key={story.id}>
+            <ListItem {...story} />
+          </li>
         ))}
-        <Link href="/[stories]/[page]" as={`/${query.stories}/${+query.page! + 1}`}>
-          <a>More</a>
-        </Link>
-      </section>
+        <li>
+          <Link href={`/${stories}/${+page + 1}`}>
+            <a>More</a>
+          </Link>
+        </li>
+      </ol>
+
+      <style jsx>{`
+        ol {
+          padding: 0 0 0 2rem;
+          margin: 0;
+        }
+
+        li {
+          color: var(--fg-light);
+        }
+
+        li:last-child {
+          padding: 1rem 0;
+          list-style: none;
+        }
+      `}</style>
     </>
   );
 };
