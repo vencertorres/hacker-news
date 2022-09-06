@@ -23,7 +23,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return {
     props: {
       story,
-      comments: await fetchComments(story.kids),
+      comments: await fetchComments(story.kids || []),
     },
     revalidate: 60,
   };

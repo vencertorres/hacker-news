@@ -13,7 +13,6 @@ specifiers:
   prettier: ^2.7.1
   react: 18.2.0
   react-dom: 18.2.0
-  styled-jsx: ^5.0.5
   tldts: ^5.7.90
   typescript: 4.8.2
 
@@ -23,7 +22,6 @@ dependencies:
   nprogress: 0.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
-  styled-jsx: 5.0.5_react@18.2.0
   tldts: 5.7.90
 
 devDependencies:
@@ -1771,22 +1769,6 @@ packages:
 
   /styled-jsx/5.0.4_react@18.2.0:
     resolution: {integrity: sha512-sDFWLbg4zR+UkNzfk5lPilyIgtpddfxXEULxhujorr5jtePTUqiPDc5BC0v1NRqTr/WaFBGQQUoYToGlF4B2KQ==}
-    engines: {node: '>= 12.0.0'}
-    peerDependencies:
-      '@babel/core': '*'
-      babel-plugin-macros: '*'
-      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      babel-plugin-macros:
-        optional: true
-    dependencies:
-      react: 18.2.0
-    dev: false
-
-  /styled-jsx/5.0.5_react@18.2.0:
-    resolution: {integrity: sha512-tCd8t8expdtl9UJbG3aKjGYheAbOPQenf7qPts75kovpz4ebGGZ4b8r0JNhy1NaddFBrNi5rRQVZWtMXIs7LgA==}
     engines: {node: '>= 12.0.0'}
     peerDependencies:
       '@babel/core': '*'

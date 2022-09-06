@@ -2,9 +2,9 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { Router } from "next/router";
 import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 import Layout from "../components/layout";
 import "../styles/globals.css";
-import "../styles/nprogress.css";
 
 NProgress.configure({ showSpinner: false });
 

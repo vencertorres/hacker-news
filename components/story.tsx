@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { parse } from "tldts";
-import { Story } from "../types/interfaces";
 
 const plural = (n: number, s: string) => {
   if (n === 1) {
-    return `${s}`;
+    return `${n} ${s}`;
   } else if (n > 1) {
-    return `${s}s`;
+    return `${n} ${s}s`;
   } else {
     return "";
   }
@@ -32,15 +31,13 @@ const Story = (props: Story) => {
         <div className="meta">{time}</div>
       ) : (
         <div className="meta">
-          {score} {plural(score, "point")} by{" "}
+          {plural(score, "point")} by{" "}
           <Link href={`/user/${by}`}>
             <a>{by}</a>
           </Link>{" "}
           {time} |{" "}
           <Link href={`/item/${id}`}>
-            <a>
-              {descendants} {plural(descendants, "comment")}
-            </a>
+            <a>{plural(descendants, "comment")}</a>
           </Link>
         </div>
       )}
