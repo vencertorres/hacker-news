@@ -11,7 +11,7 @@ const plural = (n: number, s: string) => {
   }
 };
 
-const Story = (props: Story) => {
+const Story = (props: any) => {
   const { by, descendants, id, score, time, title, type, url } = props;
 
   return (
