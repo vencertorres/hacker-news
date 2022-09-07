@@ -1,4 +1,4 @@
 {
   "extends": "next/core-web-vitals",
-  "rules": {"react/no-unknown-property": 0}
+  "rules": { "react/no-unknown-property": ["error", { "ignore": ["jsx", "global"] }] }
 }
