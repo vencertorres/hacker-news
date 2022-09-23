@@ -1,8 +1,8 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
-import ListItem from "../../components/story";
+import StoryItem from "../../components/story-item";
 import { fetchStories } from "../../lib/fetch-stories";
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -17,7 +17,7 @@ interface Params extends ParsedUrlQuery {
   page: string;
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps = async (context: GetStaticPropsContext) => {
   const { stories, page } = context.params as Params;
   const { items, start } = await fetchStories(stories, page);
   return {
@@ -46,7 +46,7 @@ const Stories = ({
       <ol start={start + 1}>
         {items.map((story: any) => (
           <li key={story.id}>
-            <ListItem {...story} />
+            <StoryItem {...story} />
           </li>
         ))}
         <li>

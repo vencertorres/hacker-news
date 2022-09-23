@@ -1,11 +1,12 @@
-import Comment from "./comment";
+import { Comment } from "../interfaces/comment";
+import CommentItem from "./comment-item";
 
-const Comments = ({ comments }: { comments: any[] }) => {
+const Comments = ({ comments }: { comments: Comment[] }) => {
   return (
     <div>
       <ul>
         {(comments || []).map((comment: any) => (
-          <Comment key={comment.id} {...comment} />
+          <CommentItem key={comment.id} {...comment} />
         ))}
       </ul>
 

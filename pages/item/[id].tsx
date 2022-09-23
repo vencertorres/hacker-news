@@ -1,8 +1,9 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { ParsedUrlQuery } from "querystring";
 import Comments from "../../components/comments";
-import Story from "../../components/story";
+import StoryItem from "../../components/story-item";
+import { Story } from "../../interfaces/story";
 import { fetchComments } from "../../lib/fetch-comments";
 import { fetchData } from "../../lib/fetch-data";
 
@@ -17,9 +18,9 @@ interface Params extends ParsedUrlQuery {
   id: string;
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps = async (context: GetStaticPropsContext) => {
   const { id } = context.params as Params;
-  const story = await fetchData(+id);
+  const story: Story = await fetchData(`item/${id}`);
   return {
     props: {
       story,
@@ -38,8 +39,8 @@ const ItemPage = ({ story, comments }: InferGetStaticPropsType<typeof getStaticP
         <title>{title}</title>
       </Head>
 
-      <Story {...story} />
-      <p dangerouslySetInnerHTML={{ __html: story.text }} />
+      <StoryItem {...story} />
+      {story.text && <p dangerouslySetInnerHTML={{ __html: story.text }} />}
 
       <hr />
 

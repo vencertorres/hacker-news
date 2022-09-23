@@ -1,6 +1,7 @@
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { ParsedUrlQuery } from "querystring";
+import { User } from "../../interfaces/user";
 import { fetchData } from "../../lib/fetch-data";
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -14,9 +15,9 @@ interface Params extends ParsedUrlQuery {
   username: string;
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps = async (context: GetStaticPropsContext) => {
   const { username } = context.params as Params;
-  const user = await fetchData(username);
+  const user: User = await fetchData(`user/${username}`);
   return {
     props: {
       user,
@@ -35,7 +36,7 @@ const User = ({ user }: InferGetStaticPropsType<typeof getStaticProps>) => {
       </Head>
 
       <p>user: {user.id}</p>
-      <p>created: {user.time}</p>
+      <p>created: {user.created}</p>
       <p>karma: {user.karma}</p>
 
       <p>

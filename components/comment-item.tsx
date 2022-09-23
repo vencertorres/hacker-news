@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { useState } from "react";
+import { Comment } from "../interfaces/comment";
 
-const Comment = (props: any) => {
+const CommentItem = (props: Comment) => {
   const [expanded, setExpanded] = useState(true);
   const { by, comments, time, text, dead, deleted } = props;
 
@@ -22,7 +23,7 @@ const Comment = (props: any) => {
 
           <ul>
             {(comments || []).map((comment: any) => (
-              <Comment key={comment.id} {...comment} />
+              <CommentItem key={comment.id} {...comment} />
             ))}
           </ul>
         </>
@@ -74,4 +75,4 @@ const Comment = (props: any) => {
   );
 };
 
-export default Comment;
+export default CommentItem;

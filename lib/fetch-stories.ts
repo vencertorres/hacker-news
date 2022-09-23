@@ -1,3 +1,4 @@
+import { Story } from "../interfaces/story";
 import { fetchData } from "./fetch-data";
 
 const validStories = new Map([
@@ -8,7 +9,10 @@ const validStories = new Map([
   ["jobs", "job"],
 ]);
 
-export const fetchStories = async (stories: string, page: string) => {
+export const fetchStories = async (
+  stories: string,
+  page: string
+): Promise<{ items: Story[]; start: number }> => {
   const start = (+page - 1) * 30;
   const end = start + 30;
 
@@ -17,6 +21,8 @@ export const fetchStories = async (stories: string, page: string) => {
   );
   const ids = await res.json();
 
-  const items = await Promise.all(ids.slice(start, end).map(fetchData));
+  const items = await Promise.all(
+    ids.slice(start, end).map((id: number) => fetchData(`item/${id}`))
+  );
   return { items, start };
 };

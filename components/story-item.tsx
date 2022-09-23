@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { parse } from "tldts";
+import { Story } from "../interfaces/story";
 
 const plural = (n: number, s: string) => {
   if (n === 1) {
@@ -11,7 +12,7 @@ const plural = (n: number, s: string) => {
   }
 };
 
-const Story = (props: any) => {
+const StoryItem = (props: Story) => {
   const { by, descendants, id, score, time, title, type, url } = props;
 
   return (
@@ -91,4 +92,4 @@ const Story = (props: any) => {
   );
 };
 
-export default Story;
+export default StoryItem;
